@@ -18,8 +18,51 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <link rel="icon" href="./img/cropped-favicon-32x32.png" type="image/x-icon">
   <title>Cha.i | Carafewerk</title>
-</head>
+  <style>
+    @keyframes bottomToTop {
+      from {
+        transform: translateY(100px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  
+    .grid-item {
+      opacity: 0;
+      transform: translateY(100px);
+      transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+    }
+  
+    .animate {
+      opacity: 1;
+      transform: translateY(0);
+      animation: bottomToTop 1s ease-in-out forwards;
+    }
+    #imageContainer_2 img {
+    transition: transform 0.5s ease-in-out;
+  }
+  .cursor {
+    width: 2px;
+    background-color: black;
+    margin-left: 3px;
+    animation: blink 0.7s infinite;
+    margin-top: 5px;
+    height: 30px;
+    }
 
+  @keyframes blink {
+    0%, 50% {
+      opacity: 1;
+    }
+    50.01%, 100% {
+      opacity: 0;
+    }
+  }
+  </style>
+</head>
 <body style="background-color: #f2f2f2">
   <header>
     <nav class="navbar navbar-expand-md bg-black" style="height: 110px">
@@ -52,8 +95,8 @@
       </div>
     </nav>
   </header>
-  <div class="d-flex justify-content-center" id="dynamicContentContainer" style="padding: 20px;height:65px ;">
-    <h2 class="text-dark fw-bold fs-25 mb-6"></h2>
+  <div class="d-flex justify-content-center" id="dynamicContentContainer" style="padding: 20px;height:65px;">
+    <h2 class="text-dark fw-bold fs-25 mb-6"></h2><div class="cursor"></div>
   </div>
   <script>
     function changeLanguage() {
@@ -73,23 +116,38 @@
       const h2Element = document.querySelector("#dynamicContentContainer h2");
       let currentIndex = 0;
 
-      function typeText(text) {
+      function typeText(text, callback) {
         let index = 0;
-        const intervalId = setInterval(() => {
+        const typeInterval = setInterval(() => {
           h2Element.textContent = text.substring(0, index);
           index++;
           if (index > text.length) {
-            clearInterval(intervalId);
+            clearInterval(typeInterval);
             setTimeout(() => {
-              slideText();
+              deleteText(callback);
             }, 1000);
           }
         }, 100);
       }
 
+      function deleteText(callback) {
+        let text = h2Element.textContent;
+        let index = text.length;
+        const deleteInterval = setInterval(() => {
+          h2Element.textContent = text.substring(0, index);
+          index--;
+          if (index < 0) {
+            clearInterval(deleteInterval);
+            setTimeout(callback, 500);
+          }
+        }, 50);
+      }
+
       function slideText() {
-        typeText(languages[currentIndex]);
-        currentIndex = (currentIndex + 1) % languages.length;
+        typeText(languages[currentIndex], () => {
+          currentIndex = (currentIndex + 1) % languages.length;
+          slideText();
+        });
       }
 
       slideText();
@@ -109,22 +167,14 @@
       <div class="col-xs-13 col-md-7">
         <div class="text-dark font-weight-bold px-5" style="margin-top: 77px">
           <h2>
-            <span style="
-                  font-size: 55px;
-                  font-family: 'Raleway', Sans-serif;
-                  font-weight: bold;
-                  line-height: 1;
-                ">
+            <span style="font-size: 55px;font-family: 'Raleway', Sans-serif;font-weight: bold;line-height: 1;">
               The taste of tea you get <br />
               at home. Now also in your office</span>
           </h2>
           <div style="width: 50%;position: relative; background-color:  #fcae17;height: 4px; margin-top: 20px;"></div>
           <p style="margin-top:20px ;">
-            <span style="
-                  font-family: 'Raleway', Sans-serif;
-                  font-size: 22px;
-                  line-height: 1.8em;
-                ">Forget bland powdery vending machine tea. Skip the Tapri<br />
+            <span style="font-family: 'Raleway', Sans-serif;font-size: 22px;line-height: 1.8em;">Forget bland powdery
+              vending machine tea. Skip the Tapri<br />
               queues. Get <b>cha.i.</b>
               <span style="color: #fcae17; font-weight: bold">Its’s super easy, makes great tea, and you’ve seen nothing
                 like this before.</span></span>
@@ -193,27 +243,49 @@
             style="transition: transform 0.5s ease-in-out" />
         </div>
         <script>
-          var img2 = document.querySelector("#imageContainer_2 img");
-          console.log(img2);
-          var isFirstScale2 = true;
-
-          function toggleScale2() {
-            if (isFirstScale2) {
-              img2.style.transform = "scale(1.1)";
-              isFirstScale2 = false;
-              setTimeout(function () {
-                img2.style.transform = "scale(1.2)";
-              }, 3000);
-            } else {
-              if (img2.style.transform === "scale(1.1)") {
-                img2.style.transform = "scale(1.2)";
-              } else {
+          document.addEventListener('DOMContentLoaded', function () {
+            // Intersection Observer setup
+            let options = {
+              root: null,
+              rootMargin: '0px',
+              threshold: 0.1
+            };
+        
+            let observer = new IntersectionObserver((entries, observer) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add('animate');
+                } else {
+                  entry.target.classList.remove('animate');
+                }
+              });
+            }, options);
+        
+            // Observe the article element
+            let article = document.querySelector('article');
+            observer.observe(article);
+        
+            // Image scaling effect
+            var img2 = document.querySelector("#imageContainer_2 img");
+            var isFirstScale2 = true;
+        
+            function toggleScale2() {
+              if (isFirstScale2) {
                 img2.style.transform = "scale(1.1)";
+                isFirstScale2 = false;
+                setTimeout(function () {
+                  img2.style.transform = "scale(1.2)";
+                }, 3000);
+              } else {
+                if (img2.style.transform === "scale(1.1)") {
+                  img2.style.transform = "scale(1.2)";
+                } else {
+                  img2.style.transform = "scale(1.1)";
+                }
               }
             }
-          }
-
-          setInterval(toggleScale2, 6000);
+            setInterval(toggleScale2, 6000);
+          });
         </script>
       </div>
     </article>
@@ -226,10 +298,9 @@
         style="font-family: 'Raleway', Sans-serif;font-size: 48px;font-weight: bold;line-height: 1;margin: 0px -189px 275px -87px">
         REAL MILK for <br />असली स्वाद
       </h2>
-      <!-- <hr style="width: 16%;border: 3px solid #fcae17;position: absolute;clear: both;margin-right: 297px;" /> -->
       <div style="width: 16%;position: absolute; background-color:  #fcae17;height: 4px; margin-right: 297px;"></div>
 
-      <div style="margin: 183px 147px 35px -125px">
+      <div  style="margin: 183px 147px 35px -125px">
         <h2 style="font-size: 24px;font-weight: 400;line-height: 1;font-family: 'Raleway', Sans-serif;">
           Place the same milk jar in <br />
           the fridge after use.
@@ -239,38 +310,30 @@
         </h2>
       </div>
     </div>
-    <div class="grid-item" style="flex-direction: column;background-image: linear-gradient(150deg, #c34141 0%, #fcae17 100%);">
-      <h2 style="font-family: 'Raleway', Sans-serif;font-size: 48px;font-weight: bold;line-height: 1;margin: 42px -70px 35px -60px;color: #fff;">
+    <div class="grid-item"
+      style="flex-direction: column;background-image: linear-gradient(150deg, #c34141 0%, #fcae17 100%);">
+      <h2
+        style="font-family: 'Raleway', Sans-serif;font-size: 48px;font-weight: bold;line-height: 1;margin: 42px -70px 35px -60px;color: #fff;">
         Your brand of CTC tea. <br />YOUR pick of leaf tea.<br />No pods.
       </h2>
-      <!-- <hr style="width: 42%;border: 3px solid #fcae17;position: relative;clear: both;margin-right: 259px;" /> -->
       <div style="width: 42%;position: relative; background-color:  #fcae17;height: 4px; margin-right: 259px;"></div>
-
       <div>
         <img src="./img/Tea-Maker-Jars-Close-Up-1536x864.png" height="317px" width="565" />
       </div>
     </div>
-    <div style="display: flex;justify-content:space-evenly ;align-items: center;background-color: white;font-size: 2em;border: 2px solid #fff;border-radius: 25px;flex-direction: column;background-image: linear-gradient(50deg, #ffffff 0%, #fcae17 67%);">
-      <h2 style="
-            font-family: 'Raleway', Sans-serif;
-            font-size: 48px;
-            font-weight: bold;
-            margin-bottom: 285px;
-            margin: 0px 10px 10px 10px;
-          ">
+    <div class="grid-item"
+      style="display: flex;justify-content:space-evenly ;align-items: center;background-color: white;font-size: 2em;border: 2px solid #fff;border-radius: 25px;flex-direction: column;background-image: linear-gradient(50deg, #ffffff 0%, #fcae17 67%);">
+      <h2
+        style="font-family: 'Raleway', Sans-serif;font-size: 48px;font-weight: bold;margin-bottom: 285px;margin: 0px 10px 10px 10px;">
         Complete precision in <br />
         temperature control.
       </h2>
-      <!-- <hr style="width: 16%;border: 3px solid #fcae17;position: absolute;clear: both;margin: -40px 300px 200px 31px;" /> -->
-      <div style="width: 16%;position: absolute; background-color:  #fcae17;height: 4px; margin: -40px 300px 200px 31px;"></div>
+      <div
+        style="width: 16%;position: absolute; background-color:  #fcae17;height: 4px; margin: -40px 300px 200px 31px;">
+      </div>
 
       <div>
-        <h2 style="
-              font-family: 'Raleway', Sans-serif;
-              font-size: 24px;
-              font-weight: 400;
-              margin: 10px 0px 30px 44px;
-            ">
+        <h2 style="font-family: 'Raleway', Sans-serif;font-size: 24px;font-weight: 400;margin: 10px 0px 30px 44px;">
           Green tea -<b>80 degrees for 3 minutes.</b> <br />Kadak chai -
           <b>Boil for 10 minutes.</b>
         </h2>
@@ -278,39 +341,44 @@
           width="565" />
       </div>
     </div>
-    <div style="
-          background-color: #e0e0e0;
-          flex-direction: column;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-size: 2em;
-          border: 2px solid #fff;
-          border-radius: 25px;
-        ">
-      <h2 style="
-            font-family: 'Raleway', Sans-serif;
-            font-size: 48px;
-            font-weight: 700;
-            margin: 50px 23px 120px 18px;
-          ">
+    <div class="grid-item"
+      style="background-color: #e0e0e0;flex-direction: column;display: flex;justify-content: center;align-items: center;font-size: 2em;border: 2px solid #fff;border-radius: 25px;">
+      <h2 style="font-family: 'Raleway', Sans-serif;font-size: 48px;font-weight: 700;margin: 50px 23px 120px 18px;">
         Unique retractable <br />sieve ensures just the <br />right exposure
         time.
       </h2>
-      <!-- <hr style="width: 50%;border: 3px solid #fcae17;position: relative;clear: both;margin: -66px 255px 210px 43px;" /> -->
-                <div style="width: 50%;position: relative; background-color:  #fcae17;height: 4px; margin: -66px 255px 210px 43px;"></div>
-
+      <div
+        style="width: 50%;position: relative; background-color:  #fcae17;height: 4px; margin: -66px 255px 210px 43px;">
+      </div>
       <div>
-        <video src="./img/Video-2.mp4" style="
-              width: 100%;
-              max-width: 530px;
-              display: block;
-              margin: -183px 10px 0px 10px;
-              height: 335px;
-              border-radius: 20px;
-            " autoplay muted loop playsinline></video>
+        <video src="./img/Video-2.mp4"
+          style="width: 100%;max-width: 530px;display: block;margin: -183px 10px 0px 10px;height: 335px;border-radius: 20px;"
+          autoplay muted loop playsinline></video>
       </div>
     </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        let options = {
+          root: null,
+          rootMargin: '0px',
+          threshold: 0.1
+        };
+    
+        let observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('animate');
+            } else {
+              entry.target.classList.remove('animate');
+            }
+          });
+        }, options);
+    
+        document.querySelectorAll('.grid-item').forEach(item => {
+          observer.observe(item);
+        });
+      });
+    </script>
   </section>
   <section style="display: grid;margin-top: 160px;margin-left: -50px; background-color: #dcdcdc;">
     <div class="container my-5">
@@ -339,9 +407,9 @@
       </div>
     </div>
   </section>
-  <footer style="font-family:'Raleway', Sans-serif;background-color: #ffffff;;">
+  <footer style="font-family:'Raleway', Sans-serif;background-color: #ffffff;">
     <section
-      style="display: flex;justify-content: space-between; height: 250px;  align-items: center; background-color: #ffffff; border-top: 1px solid #ddd;">
+      style="display: flex;justify-content: space-between; height: 250px;  align-items: center; background-color: #ffffff;">
       <div style="font-size: 48px;text-align: start;padding-left: 30px;">
         Get in touch <b><span style="color: #000;">today!</span></b>
       </div>
@@ -365,49 +433,58 @@
     </section>
 
     <section
-      style="position: relative;background-image: url('./img/Mask-Group-1.png'); background-size: cover; background-position: bottom center; color: #fff; text-align: center; padding: 106px 130px;margin-top: 30px;height: 200px;">
+      style="position: relative;background-image: url('./img/Mask-Group-1.png'); background-size: cover; background-position: bottom center; color: #fff; text-align: center; padding: 106px 140px;margin-top: 30px;height: 100px;">
       <div
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1;">
       </div>
       <div
         style="position: relative; z-index: 2; height: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 20px;">
-        <h1 style="font-size: 45px; margin: 20px; color: #ffcc00;">Browse Essentials</h1>
+        <a href="./essentials.html" style="text-decoration: none;">
+          <h1 style="font-size: 45px; margin: 20px; color: #ffcc00;">Browse Essentials</h1>
+        </a>
         <p style="font-size: 20px; margin-right: -60px;">The best tea tastes even better with the best teacups!</p>
       </div>
     </section>
 
     <div
       style="display: flex; justify-content: space-around; height: 295px; background-color: #000; color: #fff; padding: 40px 30px;">
-      <div style="flex: 1; margin: 0 20px; text-align: center;">
-        <img src="./img/logo.png" alt="Logo" width="300" height="30">
+      <div style="flex: 1; margin: 0 20px; text-align: center;margin-top: 20px;">
+        <a href="./index.html"><img src="./img/logo.png" alt="Logo"width="250" height="25"></a>
       </div>
       <div style="flex: 1; margin: 0 20px;">
-        <h4>Products</h4>
+        <h5 style="font-weight: bolder;">Products</h5>
         <ul style="list-style: none; padding: 10px 0;">
-          <li style="margin: 10px 0;"><a href="#" style="color: #ffcc00; text-decoration: none;">Chai</a></li>
-          <li style="margin: 10px 0;"><a href="#" style="color: #ffcc00; text-decoration: none;">Essentials</a></li>
-        </ul>
-      </div>
-      <div style="flex: 1; margin: 0 20px;">
-        <h4>Company</h4>
-        <ul style="list-style: none; padding: 10px 0;">
-          <li style="margin: 10px 0;"><a href="#" style="color: #ffcc00; text-decoration: none;">About Us</a></li>
-          <li style="margin: 10px 0;"><a href="#" style="color: #ffcc00; text-decoration: none;">Contact Us</a></li>
-        </ul>
-      </div>
-      <div style="flex: 1; margin: 0 20px;">
-        <h4>Help</h4>
-        <ul style="list-style: none; padding: 10px 0;">
-          <li style="margin: 10px 0;"><a href="#" style="color: #ffcc00; text-decoration: none;">Return Policy</a></li>
-          <li style="margin: 10px 0;"><a href="#" style="color: #ffcc00; text-decoration: none;">Shipping Policy</a>
+          <li style="margin: 10px 0;"><a href="./index.html" style="color: #ffcc00; text-decoration: none;">Chai</a>
           </li>
-          <li style="margin: 10px 0;"><a href="#" style="color: #ffcc00; text-decoration: none;">Payment Terms</a></li>
-          <li style="margin: 10px 0;"><a href="#" style="color: #ffcc00; text-decoration: none;">Terms and
+          <li style="margin: 10px 0;"><a href="./essentials.html"
+              style="color: #ffcc00; text-decoration: none;">Essentials</a></li>
+        </ul>
+      </div>
+      <div style="flex: 1; margin: 0 20px;">
+        <h5 style="font-weight: bolder;">Company</h5>
+        <ul style="list-style: none; padding: 10px 0;">
+          <li style="margin: 10px 0;"><a href="./about.html" style="color: #ffcc00; text-decoration: none;">About Us</a>
+          </li>
+          <li style="margin: 10px 0;"><a href="./contact.html" style="color: #ffcc00; text-decoration: none;">Contact
+              Us</a></li>
+        </ul>
+      </div>
+      <div style="flex: 1; margin: 0 20px;">
+        <h5 style="font-weight: bolder;">Help</h5>
+        <ul style="list-style: none; padding: 10px 0;">
+          <li style="margin: 10px 0;"><a href="./return-policy.html"
+              style="color: #ffcc00; text-decoration: none;">Return Policy</a></li>
+          <li style="margin: 10px 0;"><a href="./shpipping-policy.html"
+              style="color: #ffcc00; text-decoration: none;">Shipping Policy</a>
+          </li>
+          <li style="margin: 10px 0;"><a href="./payment-terms.html"
+              style="color: #ffcc00; text-decoration: none;">Payment Terms</a></li>
+          <li style="margin: 10px 0;"><a href="./terms-and-conditions.html" style="color: #ffcc00; text-decoration: none;">Terms and
               Conditions</a></li>
         </ul>
       </div>
       <div style="flex: 1; margin: 0 20px;">
-        <h4>Follow Us!</h4>
+        <h5 style="font-weight: bolder;">Follow Us!</h5>
         <div style="display: flex; gap: 30px; margin-top:40px; margin-left: 20px;">
           <a href="#" style="color: #ffcc00; font-size: 24px; text-decoration: none;"><i
               class="fab fa-facebook"></i></a>
@@ -417,8 +494,8 @@
       </div>
     </div>
     <div style="font-size: 12px; text-align: center; padding: 10px; background-color: #000; color: #fff;">
-      ©Carafewerk 2023. We love our users! All Rights Reserved. Design by: Vint Media
-    </div>
+      ©Carafewerk 2023. We love our users! All Rights Reserved. Design by: <span style="font-family: 'Montserrat', Sans-serif;font-size: 12px;font-weight: 400;">Vint Media</span> 
+  </div>
   </footer>
 
 </body>

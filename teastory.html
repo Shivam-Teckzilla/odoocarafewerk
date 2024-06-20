@@ -101,6 +101,7 @@
             border: none;
             color: gray;
         }
+
         .pagination button:hover {
             color: black;
         }
@@ -141,8 +142,7 @@
                     <div class="offcanvas-body" style="overflow: hidden">
                         <ul class="navbar-nav justify-content-end flex-grow-1">
                             <li class="nav-item px-2">
-                                <a class="nav-link active text-white" aria-current="page"
-                                    href="./index.html">Cha.i</a>
+                                <a class="nav-link active text-white" aria-current="page" href="./index.html">Cha.i</a>
                             </li>
                             <li class="nav-item px-2">
                                 <a class="nav-link active text-white" aria-current="page"
@@ -543,9 +543,9 @@
         document.addEventListener('DOMContentLoaded', function () {
             const itemsPerPage = 15; // Number of items to show per page
             let currentPage = localStorage.getItem('currentPage') ? parseInt(localStorage.getItem('currentPage')) : 1; // Current page tracker
-            
+
             const items = document.querySelectorAll('.container2 .item');
-            
+
             const numPages = Math.ceil(items.length / itemsPerPage); // Calculate total number of pages
 
             function showItems(page) {
@@ -573,17 +573,17 @@
                     const button = document.createElement('button');
                     button.textContent = i;
                     button.classList.add('pageButton');
-                    if(i==1){
+                    if (i == 1) {
                         button.classList.add('currentPage');
                     }
                     button.addEventListener('click', function () {
                         goToPage(i);
                     });
-                    
+
                     paginationContainer.appendChild(button);
 
                 }
-                
+
             }
             function goToPage(page) {
                 currentPage = page;
@@ -603,9 +603,9 @@
             createPaginationButtons();
         });
     </script>
-    <footer style="font-family:'Raleway', Sans-serif;background-color: #ffffff;;">
+    <footer style="font-family:'Raleway', Sans-serif;background-color: #ffffff;">
         <section
-            style="display: flex;justify-content: space-between; height: 250px;  align-items: center; background-color: #ffffff; border-top: 1px solid #ddd;">
+            style="display: flex;justify-content: space-between; height: 250px;  align-items: center; background-color: #ffffff;">
             <div style="font-size: 48px;text-align: start;padding-left: 30px;">
                 Get in touch <b><span style="color: #000;">today!</span></b>
             </div>
@@ -629,13 +629,15 @@
         </section>
 
         <section
-            style="position: relative;background-image: url('./img/Mask-Group-1.png'); background-size: cover; background-position: bottom center; color: #fff; text-align: center; padding: 106px 130px;margin-top: 30px;height: 200px;">
+            style="position: relative;background-image: url('./img/Mask-Group-1.png'); background-size: cover; background-position: bottom center; color: #fff; text-align: center; padding: 106px 140px;margin-top: 30px;height: 100px;">
             <div
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1;">
             </div>
             <div
                 style="position: relative; z-index: 2; height: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 20px;">
-                <h1 style="font-size: 45px; margin: 20px; color: #ffcc00;">Browse Essentials</h1>
+                <a href="./essentials.html" style="text-decoration: none;">
+                    <h1 style="font-size: 45px; margin: 20px; color: #ffcc00;">Browse Essentials</h1>
+                </a>
                 <p style="font-size: 20px; margin-right: -60px;">The best tea tastes even better with the best teacups!
                 </p>
             </div>
@@ -643,42 +645,47 @@
 
         <div
             style="display: flex; justify-content: space-around; height: 295px; background-color: #000; color: #fff; padding: 40px 30px;">
-            <div style="flex: 1; margin: 0 20px; text-align: center;">
-                <img src="./img/logo.png" alt="Logo" width="300" height="30">
+            <div style="flex: 1; margin: 0 20px; text-align: center;margin-top: 20px;">
+                <a href="./index.html"><img src="./img/logo.png" alt="Logo" width="250" height="25"></a>
             </div>
             <div style="flex: 1; margin: 0 20px;">
-                <h4>Products</h4>
+                <h5 style="font-weight: bolder;">Products</h5>
                 <ul style="list-style: none; padding: 10px 0;">
-                    <li style="margin: 10px 0;"><a href="#" style="color: #ffcc00; text-decoration: none;">Chai</a></li>
-                    <li style="margin: 10px 0;"><a href="#"
+                    <li style="margin: 10px 0;"><a href="./index.html"
+                            style="color: #ffcc00; text-decoration: none;">Chai</a>
+                    </li>
+                    <li style="margin: 10px 0;"><a href="./essentials.html"
                             style="color: #ffcc00; text-decoration: none;">Essentials</a></li>
                 </ul>
             </div>
             <div style="flex: 1; margin: 0 20px;">
-                <h4>Company</h4>
+                <h5 style="font-weight: bolder;">Company</h5>
                 <ul style="list-style: none; padding: 10px 0;">
-                    <li style="margin: 10px 0;"><a href="#" style="color: #ffcc00; text-decoration: none;">About Us</a>
+                    <li style="margin: 10px 0;"><a href="./about.html"
+                            style="color: #ffcc00; text-decoration: none;">About Us</a>
                     </li>
-                    <li style="margin: 10px 0;"><a href="#" style="color: #ffcc00; text-decoration: none;">Contact
+                    <li style="margin: 10px 0;"><a href="./contact.html"
+                            style="color: #ffcc00; text-decoration: none;">Contact
                             Us</a></li>
                 </ul>
             </div>
             <div style="flex: 1; margin: 0 20px;">
-                <h4>Help</h4>
+                <h5 style="font-weight: bolder;">Help</h5>
                 <ul style="list-style: none; padding: 10px 0;">
-                    <li style="margin: 10px 0;"><a href="#" style="color: #ffcc00; text-decoration: none;">Return
-                            Policy</a></li>
-                    <li style="margin: 10px 0;"><a href="#" style="color: #ffcc00; text-decoration: none;">Shipping
-                            Policy</a>
+                    <li style="margin: 10px 0;"><a href="./return-policy.html"
+                            style="color: #ffcc00; text-decoration: none;">Return Policy</a></li>
+                    <li style="margin: 10px 0;"><a href="./shpipping-policy.html"
+                            style="color: #ffcc00; text-decoration: none;">Shipping Policy</a>
                     </li>
-                    <li style="margin: 10px 0;"><a href="#" style="color: #ffcc00; text-decoration: none;">Payment
-                            Terms</a></li>
-                    <li style="margin: 10px 0;"><a href="#" style="color: #ffcc00; text-decoration: none;">Terms and
+                    <li style="margin: 10px 0;"><a href="./payment-terms.html"
+                            style="color: #ffcc00; text-decoration: none;">Payment Terms</a></li>
+                    <li style="margin: 10px 0;"><a href="./terms-and-conditions.html"
+                            style="color: #ffcc00; text-decoration: none;">Terms and
                             Conditions</a></li>
                 </ul>
             </div>
             <div style="flex: 1; margin: 0 20px;">
-                <h4>Follow Us!</h4>
+                <h5 style="font-weight: bolder;">Follow Us!</h5>
                 <div style="display: flex; gap: 30px; margin-top:40px; margin-left: 20px;">
                     <a href="#" style="color: #ffcc00; font-size: 24px; text-decoration: none;"><i
                             class="fab fa-facebook"></i></a>
@@ -688,7 +695,8 @@
             </div>
         </div>
         <div style="font-size: 12px; text-align: center; padding: 10px; background-color: #000; color: #fff;">
-            ©Carafewerk 2023. We love our users! All Rights Reserved. Design by: Vint Media
+            ©Carafewerk 2023. We love our users! All Rights Reserved. Design by: <span
+                style="font-family: 'Montserrat', Sans-serif;font-size: 12px;font-weight: 400;">Vint Media</span>
         </div>
     </footer>
 
