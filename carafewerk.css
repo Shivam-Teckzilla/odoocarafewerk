@@ -3,7 +3,7 @@ body {
   align-items: center;
   height: 100vh;
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family:'Raleway', Sans-serif;
 }
 .nav-item a.nav-link.active {
     font-size: 20px;
